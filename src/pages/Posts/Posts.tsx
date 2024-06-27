@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import axiosApi from '../../axiosApi';
 import {ApiPosts, Post} from '../../types';
 import {Link} from 'react-router-dom';
@@ -11,12 +11,10 @@ const Posts = () => {
 
     const postsResponse = response.data;
     if (postsResponse !== null) {
-      const posts: Post[] = Object.keys(postsResponse).map((id: string) => {
-        return {
-          ...postsResponse[id],
-          id,
-        };
-      });
+      const posts: Post[] = Object.keys(postsResponse).map((id: string) => ({
+        ...postsResponse[id],
+        id,
+      }));
       setPosts(posts);
     } else {
       setPosts([]);
@@ -39,7 +37,7 @@ const Posts = () => {
           </div>
           <div className="card-body">
             <h5 className="card-title">{post.title}</h5>
-            <Link to={`/posts/${post.id}`} className="btn btn-primary">Read more</Link>
+            <Link to={`/posts/${post.id}`} className="btn btn-primary">Read more...</Link>
           </div>
         </div>
       ))}

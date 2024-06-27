@@ -12,7 +12,7 @@ export interface Post extends ApiPost {
   id: string;
 }
 
-export interface GameMutation {
+export interface PostMutation {
   title: string;
   description: string;
   datetime: string;
