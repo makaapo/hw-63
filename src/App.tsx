@@ -1,7 +1,7 @@
+import React from 'react';
 import Toolbar from './component/NavBar/NavBar';
 import {Route, Routes} from 'react-router-dom';
 import Posts from './pages/Posts/Posts';
-import React from 'react';
 import MutatePost from './pages/MutatePost/MutatePost';
 import Post from './pages/Post/Post';
 import About from './pages/About/About';
@@ -10,7 +10,7 @@ import Contacts from './pages/Contacts/Contacts';
 const App = () => (
   <>
     <header>
-      <Toolbar/>
+      <Toolbar />
     </header>
     <div className="container-fluid">
       <main>

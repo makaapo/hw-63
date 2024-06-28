@@ -8,7 +8,7 @@ import {enqueueSnackbar} from 'notistack';
 const Post = () => {
   const [post, setPost] = useState<Post | null>(null);
   const navigate = useNavigate();
-  const {id } = useParams();
+  const {id} = useParams();
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchPost = useCallback(async (id: string) => {

@@ -13,7 +13,7 @@ const initialState = {
 const MutatePost = () => {
   const [postMutation, setPostMutation] = useState<PostMutation>(initialState);
   const navigate = useNavigate();
-  const {id } = useParams();
+  const {id} = useParams();
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchOnePost = useCallback(async (id: string) => {
@@ -57,6 +57,7 @@ const MutatePost = () => {
   const onFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
+      setIsLoading(true);
       const postData = {
         ...postMutation,
         datetime: new Date().toISOString(),
@@ -70,6 +71,8 @@ const MutatePost = () => {
       navigate('/');
     } catch (error) {
       enqueueSnackbar('Something went wrong', {variant: 'error'});
+    } finally {
+      setIsLoading(false);
     }
   };
 

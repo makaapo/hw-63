@@ -15,16 +15,16 @@ const Toolbar = () => {
         <div className="collapse navbar-collapse" id="navbarText">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <NavLink to="/" className="nav-link" aria-current="page" href="#">Home</NavLink>
+              <NavLink to="/" className="nav-link" aria-current="page">Home</NavLink>
             </li>
             <li className="nav-item">
-              <NavLink to="/new-post" className="nav-link" href="#">Add</NavLink>
+              <NavLink to="/new-post" className="nav-link">Add</NavLink>
             </li>
             <li className="nav-item">
-              <NavLink to="/about" className="nav-link" href="#">About</NavLink>
+              <NavLink to="/about" className="nav-link">About</NavLink>
             </li>
             <li className="nav-item">
-              <NavLink to="/contacts" className="nav-link" href="#">Contacts</NavLink>
+              <NavLink to="/contacts" className="nav-link">Contacts</NavLink>
             </li>
           </ul>
         </div>
