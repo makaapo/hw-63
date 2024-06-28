@@ -14,7 +14,7 @@ const App = () => (
     </header>
     <main>
       <Routes>
-        <Route path="/" element={<Posts/>} />
+        <Route path="/" element={<Posts />}/>
         <Route path="/new-post" element={<MutatePost />}/>
         <Route path="/posts/:id" element={<Post />}/>
         <Route path="/posts/:id/edit" element={<MutatePost />}/>
@@ -26,4 +26,4 @@ const App = () => (
   </div>
 );
 
-export default App
+export default App;

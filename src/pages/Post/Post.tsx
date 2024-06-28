@@ -8,9 +8,11 @@ import {enqueueSnackbar} from 'notistack';
 const Post = () => {
   const [post, setPost] = useState<Post[]>([]);
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchPosts = useCallback(async () => {
     try {
+      setIsLoading(true);
       const response = await axiosApi.get<ApiPosts>('/posts.json');
       if (response.data) {
         const fetchedPosts: Post[] = Object.keys(response.data).map((id: string) => ({
@@ -23,6 +25,8 @@ const Post = () => {
       }
     } catch (error) {
       enqueueSnackbar('failed fetch post', {variant: 'error'})
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
@@ -32,18 +36,28 @@ const Post = () => {
 
   const onDelete = async (id: string) => {
     try {
+      setIsLoading(true);
       await axiosApi.delete(`/posts/${id}.json`);
-      enqueueSnackbar('Post deleted', { variant: 'success' });
+      enqueueSnackbar('Post deleted', {variant: 'success'});
       const updatedPosts = post.filter(post => post.id !== id);
       setPost(updatedPosts);
       navigate('/');
     } catch (error) {
       enqueueSnackbar('failed delete post:', {variant: 'error'})
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <>
+      {isLoading && (
+        <div className="d-flex justify-content-center">
+          <div className="spinner-border text-primaryr" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      )}
       {post.map(post => (
         <div className="card mb-3" key={post.id}>
           <div className="card-header">Created on: {formatDate(post.datetime)}</div>

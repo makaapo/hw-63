@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {ApiPost, PostMutation} from '../../types';
 import {useNavigate, useParams} from 'react-router-dom';
 import axiosApi from '../../axiosApi';
-import { enqueueSnackbar } from 'notistack';
+import {enqueueSnackbar} from 'notistack';
 
 const initialState = {
   description: '',
@@ -14,15 +14,19 @@ const MutatePost = () => {
   const [postMutation, setPostMutation] = useState<PostMutation>(initialState);
   const navigate = useNavigate();
   const {id } = useParams();
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchOnePost = useCallback(async (id: string) => {
     try {
+      setIsLoading(true);
       const response = await axiosApi.get<ApiPost | null>(`posts/${id}.json`);
       if (response.data) {
         setPostMutation({...response.data});
       }
     } catch (error) {
       enqueueSnackbar('Error fetching post', {variant: 'error'});
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
@@ -70,8 +74,17 @@ const MutatePost = () => {
   };
 
   return (
-    <form className="row flex-column align-items-center text-center g-3 needs-validation mt-5" onSubmit={onFormSubmit}>
-      <h4>{id ? 'Edit post' : 'Add new post'}</h4>
+    <>
+      {isLoading && (
+        <div className="d-flex justify-content-center">
+          <div className="spinner-border text-primaryr" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      )}
+      <form className="row flex-column align-items-center text-center g-3 needs-validation mt-5"
+            onSubmit={onFormSubmit}>
+        <h4>{id ? 'Edit post' : 'Add new post'}</h4>
       <div className="col-md-4 position-relative">
         <label className="form-label">Title</label>
         <div className="input-group">
@@ -100,6 +113,7 @@ const MutatePost = () => {
         <button className="btn btn-info text-white" type="submit">Save</button>
       </div>
     </form>
+    </>
   );
 };
 
