@@ -3,7 +3,7 @@ import {NavLink} from 'react-router-dom';
 
 const Toolbar = () => {
   return (
-    <nav className="navbar navbar-expand-lg bg-body-tertiary">
+    <nav className="navbar navbar-expand-lg bg-body-secondary mb-5">
       <div className="container-fluid">
         <NavLink to="/" className="navbar-brand d-flex text-center fs-3">
           My Blog

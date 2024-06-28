@@ -1,51 +1,53 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import axiosApi from '../../axiosApi';
-import {ApiPosts, Post} from '../../types';
-import {Link, useNavigate} from 'react-router-dom';
+import {ApiPost, Post} from '../../types';
+import {Link, useNavigate, useParams} from 'react-router-dom';
 import formatDate from '../../constants';
 import {enqueueSnackbar} from 'notistack';
 
 const Post = () => {
-  const [post, setPost] = useState<Post[]>([]);
+  const [post, setPost] = useState<Post | null>(null);
   const navigate = useNavigate();
+  const {id } = useParams();
   const [isLoading, setIsLoading] = useState(false);
 
-  const fetchPosts = useCallback(async () => {
+  const fetchPost = useCallback(async (id: string) => {
     try {
       setIsLoading(true);
-      const response = await axiosApi.get<ApiPosts>('/posts.json');
+      const response = await axiosApi.get<ApiPost>(`/posts/${id}.json`);
       if (response.data) {
-        const fetchedPosts: Post[] = Object.keys(response.data).map((id: string) => ({
-          ...response.data[id],
+        setPost({
+          ...response.data,
           id,
-        }));
-        setPost(fetchedPosts);
+        });
       } else {
-        setPost([]);
+        setPost(null);
       }
     } catch (error) {
-      enqueueSnackbar('failed fetch post', {variant: 'error'})
+      enqueueSnackbar('Failed fetch post', {variant: 'error'});
     } finally {
       setIsLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    void fetchPosts();
-  }, [fetchPosts]);
+    if (id) {
+      void fetchPost(id);
+    }
+  }, [id, fetchPost]);
 
-  const onDelete = async (id: string) => {
-    try {
-      setIsLoading(true);
-      await axiosApi.delete(`/posts/${id}.json`);
-      enqueueSnackbar('Post deleted', {variant: 'success'});
-      const updatedPosts = post.filter(post => post.id !== id);
-      setPost(updatedPosts);
-      navigate('/');
-    } catch (error) {
-      enqueueSnackbar('failed delete post:', {variant: 'error'})
-    } finally {
-      setIsLoading(false);
+  const onDelete = async () => {
+    if (post && post.id) {
+      try {
+        setIsLoading(true);
+        await axiosApi.delete(`/posts/${post.id}.json`);
+        enqueueSnackbar('Post deleted', {variant: 'success'});
+        navigate('/');
+      } catch (error) {
+        enqueueSnackbar('Failed delete post', {variant: 'error'});
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -53,13 +55,13 @@ const Post = () => {
     <>
       {isLoading && (
         <div className="d-flex justify-content-center">
-          <div className="spinner-border text-primaryr" role="status">
+          <div className="spinner-border text-primary" role="status">
             <span className="visually-hidden">Loading...</span>
           </div>
         </div>
       )}
-      {post.map(post => (
-        <div className="card mb-3" key={post.id}>
+      {post && (
+        <div className="card mb-3">
           <div className="card-header">Created on: {formatDate(post.datetime)}</div>
           <div className="card-body">
             <h5 className="card-title">{post.title}</h5>
@@ -67,14 +69,12 @@ const Post = () => {
             <Link to={`/posts/${post.id}/edit`} className="btn btn-primary me-2">
               Edit
             </Link>
-            <button
-              className="btn btn-danger"
-              onClick={() => onDelete(post.id)}>
+            <button className="btn btn-danger" onClick={onDelete}>
               Delete
             </button>
           </div>
         </div>
-      ))}
+      )}
     </>
   );
 };

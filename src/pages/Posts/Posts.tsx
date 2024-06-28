@@ -49,7 +49,7 @@ const Posts = () => {
         <h2 className="text-center mt-5">Sorry, there are no posts available</h2>
       )}
       {posts.map(post => (
-        <div className="card" key={post.id}>
+        <div className="card mb-3" key={post.id}>
           <div className="card-header">
             Created on: {formatDate(post.datetime)}
           </div>

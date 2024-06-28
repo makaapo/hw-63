@@ -4,7 +4,7 @@ const Contacts = () => {
   return (
     <div className="d-flex flex-column mt-5">
       <h3 className="text-center">Contacts:</h3>
-      <p className="text-center  mt-5">
+      <p className="text-center">
         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi harum minima neque saepe sed sint sit. A
         incidunt unde voluptatibus!
       </p>
