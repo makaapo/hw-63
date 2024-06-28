@@ -2,11 +2,14 @@ import React, {useCallback, useEffect, useState} from 'react';
 import axiosApi from '../../axiosApi';
 import {ApiPosts, Post} from '../../types';
 import {Link} from 'react-router-dom';
+import formatDate from '../../constants';
+import {enqueueSnackbar} from 'notistack';
 
 const Posts = () => {
   const [posts, setPosts] = useState<Post[]>([]);
 
   const fetchPosts = useCallback(async () => {
+    try {
     const response = await axiosApi.get<ApiPosts | null>('/posts.json');
 
     const postsResponse = response.data;
@@ -19,11 +22,15 @@ const Posts = () => {
     } else {
       setPosts([]);
     }
+    } catch (error) {
+      enqueueSnackbar('failed fetch post', {variant: 'error'})
+    }
   }, []);
 
   useEffect(() => {
     void fetchPosts();
   }, [fetchPosts]);
+
 
   return (
     <>
@@ -33,7 +40,7 @@ const Posts = () => {
       {posts.map(post => (
         <div className="card" key={post.id}>
           <div className="card-header">
-            Created on: {post.datetime}
+            Created on: {formatDate(post.datetime)}
           </div>
           <div className="card-body">
             <h5 className="card-title">{post.title}</h5>

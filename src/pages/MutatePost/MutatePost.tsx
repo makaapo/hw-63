@@ -62,9 +62,10 @@ const MutatePost = () => {
       } else {
         await axiosApi.post('/posts.json', postData);
       }
+      enqueueSnackbar(id ? 'Post edited': 'Post added', {variant: 'success'});
       navigate('/');
     } catch (error) {
-      enqueueSnackbar('Something went wrong', { variant: 'error' });
+      enqueueSnackbar('Something went wrong', {variant: 'error'});
     }
   };
 

@@ -2,6 +2,8 @@ import React, {useCallback, useEffect, useState} from 'react';
 import axiosApi from '../../axiosApi';
 import {ApiPosts, Post} from '../../types';
 import {Link, useNavigate} from 'react-router-dom';
+import formatDate from '../../constants';
+import {enqueueSnackbar} from 'notistack';
 
 const Post = () => {
   const [post, setPost] = useState<Post[]>([]);
@@ -20,7 +22,7 @@ const Post = () => {
         setPost([]);
       }
     } catch (error) {
-      console.error('failed fetch posts:', error);
+      enqueueSnackbar('failed fetch post', {variant: 'error'})
     }
   }, []);
 
@@ -31,11 +33,12 @@ const Post = () => {
   const onDelete = async (id: string) => {
     try {
       await axiosApi.delete(`/posts/${id}.json`);
+      enqueueSnackbar('Post deleted', { variant: 'success' });
       const updatedPosts = post.filter(post => post.id !== id);
       setPost(updatedPosts);
       navigate('/');
     } catch (error) {
-      console.error('failed delete post:', error);
+      enqueueSnackbar('failed delete post:', {variant: 'error'})
     }
   };
 
@@ -43,7 +46,7 @@ const Post = () => {
     <>
       {post.map(post => (
         <div className="card mb-3" key={post.id}>
-          <div className="card-header">Created on: {post.datetime}</div>
+          <div className="card-header">Created on: {formatDate(post.datetime)}</div>
           <div className="card-body">
             <h5 className="card-title">{post.title}</h5>
             <p className="card-text">{post.description}</p>
